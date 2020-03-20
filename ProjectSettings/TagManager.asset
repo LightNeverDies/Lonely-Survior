@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - InventoryPanel
+  - camp
   layers:
   - Default
   - TransparentFX

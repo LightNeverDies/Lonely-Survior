@@ -619,7 +619,6 @@ MonoBehaviour:
   Fire: {fileID: 602001164}
   Smoke: {fileID: 176517808}
   Hud: {fileID: 547523397}
-  campfire: {fileID: 175380356}
 --- !u!1 &176517806
 GameObject:
   m_ObjectHideFlags: 0
@@ -12469,6 +12468,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Campfire
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a7fcac5e4f836a14a947657f09127dbb,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: a7fcac5e4f836a14a947657f09127dbb,
         type: 3}
