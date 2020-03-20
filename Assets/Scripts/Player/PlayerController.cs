@@ -7,15 +7,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //Rigidbody rigidbody; // our player's rigidbody component
-    float speed = 10.0f;
-    float rotation = 0f;
-    float rotSpeed = 80;
-    float gravity = 10;
+  //  float speed = 10.0f;
+  //  float rotation = 0f;
+  //  float rotSpeed = 80;
+   // float gravity = 10;
 
 
     public Inventory inventory;
     public GameObject Hand;
-    Vector3 moveDir = Vector3.zero;
+   // Vector3 moveDir = Vector3.zero;
     CharacterController controller;
     Animator animator;
 
@@ -26,6 +26,13 @@ public class PlayerController : MonoBehaviour
 
     public hud Hud;
 
+    float Speed = 10.0f;
+    float RotationSpeed = 80.0f;
+    float Gravity = 10.0f;
+    private Vector3 _moveDir = Vector3.zero;
+
+
+
     void FixedUpdate()
     {
 
@@ -33,10 +40,7 @@ public class PlayerController : MonoBehaviour
         {
             DropCurrentItem();
         }
-        //float hAxih = Input.GetAxis("Horizontal"); // left and right movement
-        //  float hAxiv = Input.GetAxis("Vertical");
-        //Vector3 movement = new Vector3(hAxih, 0, hAxiv) * speed * Time.fixedDeltaTime; // Movement of player variable 
-        //rigidbody.MovePosition(transform.position + movement);  // Apply movement of player
+
     }
 
     void Start()
@@ -82,13 +86,14 @@ public class PlayerController : MonoBehaviour
 
         inventory.RemoveItem(mCurrentItem);
 
+        Rigidbody rbItem;
         //Throw animation
-        
-        Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
+       
+        rbItem = goItem.AddComponent<Rigidbody>();
         if (rbItem != null)
         {
             rbItem.isKinematic = true;
-            rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
+            rbItem.AddForce(transform.forward * Time.deltaTime, ForceMode.Impulse);
 
             Invoke("DoDropItem", 0.25f);
         }
@@ -98,7 +103,8 @@ public class PlayerController : MonoBehaviour
     {
         if (mCurrentItem != null)
         {
-            Destroy((mCurrentItem as MonoBehaviour).GetComponent<Rigidbody>());
+            Destroy((this.mCurrentItem as MonoBehaviour).GetComponent<Rigidbody>());
+
             mCurrentItem = null;
         }
     }
@@ -118,10 +124,8 @@ public class PlayerController : MonoBehaviour
             mItemToPickup.onPickup();
             Hud.CloseMessagePanel();
         }
+
     }
-
-
-
 
     private void Gestures()
     {
@@ -147,42 +151,49 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
-
     private void Movement()
     {
-        if(controller.isGrounded)
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        if (v < 0)
+            v = 0;
+
+        transform.Rotate(0, h * RotationSpeed * Time.deltaTime, 0);
+        bool move = (v > 0) || (h != 0);
+        if (controller.isGrounded)
         {
-            if(Input.GetKeyDown(KeyCode.W))
+                move = (v > 0) || (h != 0);
+
+                animator.SetBool("run", move);
+
+                _moveDir = Vector3.forward * v;
+
+                _moveDir = transform.TransformDirection(_moveDir);
+                _moveDir *= Speed;
+            
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
             {
-                animator.SetInteger("condition", 1);
-                speed = 10.0f;
-                moveDir = new Vector3(0, 0, 1);
-                moveDir *= speed;
-                moveDir = transform.TransformDirection(moveDir);
+                Speed = 25.0f;
+                move = (v > 0) || (h != 0);
+
+                animator.SetBool("run", move);
+
+                _moveDir = Vector3.forward * v;
+
+                _moveDir = transform.TransformDirection(_moveDir);
+                _moveDir *= Speed;
             }
-            if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKeyUp(KeyCode.W))
             {
-                animator.SetInteger("condition", 1);
-                speed = 13.0f;
-                moveDir = new Vector3(0, 0, 1);
-                moveDir *= speed;
-                moveDir = transform.TransformDirection(moveDir);
-            }
-            if(Input.GetKeyUp(KeyCode.W))
-            {
-                animator.SetInteger("condition", 0);
-                moveDir = new Vector3(0, 0, 0);
+                animator.SetBool("run", false);
+                _moveDir = new Vector3(0, 0, 0);
             }
         }
-        rotation += Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
-        transform.eulerAngles = new Vector3(0, rotation, 0);
+        _moveDir.y -= Gravity * Time.deltaTime;
 
-        moveDir.y -= gravity * Time.deltaTime;
-        controller.Move(moveDir * Time.deltaTime);
+        controller.Move(_moveDir * Time.deltaTime);
     }
-
 
 
     private void OnTriggerEnter(Collider other)
@@ -193,6 +204,7 @@ public class PlayerController : MonoBehaviour
             mItemToPickup = item;
             Hud.OpenMessagePanel("");
         }
+
     }
 
     private void OnTriggerExit(Collider other)
@@ -203,6 +215,7 @@ public class PlayerController : MonoBehaviour
             Hud.CloseMessagePanel();
             mItemToPickup = null;
         }
+
     }
 
 

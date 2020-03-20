@@ -8,6 +8,8 @@ public class hud : MonoBehaviour
     public Inventory Inventory;
 
     public GameObject MessagePanel;
+
+    public GameObject Hint;
     void Start()
     {
         Inventory.ItemAdded += InventoryScript_ItemAdded;
@@ -71,6 +73,14 @@ public class hud : MonoBehaviour
         MessagePanel.SetActive(false);
     }
 
+    public void OpenHint(string text)
+    {
+        Hint.SetActive(true);
+    }
+    public void CloseHint()
+    {
+        Hint.SetActive(false);
+    }
 
 
 }
