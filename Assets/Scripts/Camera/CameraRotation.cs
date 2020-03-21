@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
-    public float speed=50;
+   public float speed=50f;
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Q))
-        {
+        if (Input.GetKey(KeyCode.Keypad4))
             transform.Rotate(0, speed * Time.deltaTime, 0);
-
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
+        if(Input.GetKey(KeyCode.Keypad6))
             transform.Rotate(0, -speed * Time.deltaTime, 0);
-            //transform.Rotate(0, 0, 0);
-        }
     }
 }

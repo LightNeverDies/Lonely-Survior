@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (mCurrentItem != null && Input.GetKeyDown(KeyCode.G))
+        if (mCurrentItem != null && Input.GetKey(KeyCode.G))
         {
             DropCurrentItem();
         }
