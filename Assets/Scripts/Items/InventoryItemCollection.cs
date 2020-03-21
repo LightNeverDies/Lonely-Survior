@@ -32,7 +32,7 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
         RaycastHit hit = new RaycastHit();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 1000))
+        if (Physics.Raycast(ray, out hit, 100))
         {
             gameObject.SetActive(true);
             gameObject.transform.position = hit.point;
@@ -40,8 +40,23 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
         }
     }
 
+    public virtual void DropItem()
+    {
+        RaycastHit hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(transform.position);
+
+        if (Physics.Raycast(ray, out hit, 20))
+        {
+            gameObject.SetActive(true);
+            gameObject.transform.position = hit.point;
+            gameObject.transform.eulerAngles = DropRotation;
+        }
+    }
+
+
     public virtual void onPickup()
     {
+        Destroy(gameObject.GetComponent<Rigidbody>());
         gameObject.SetActive(false);
     }
 

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 
 public class PlayerController : MonoBehaviour
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
     float RotationSpeed = 80.0f;
     float Gravity = 10.0f;
     private Vector3 _moveDir = Vector3.zero;
+    
 
 
 
@@ -84,30 +87,30 @@ public class PlayerController : MonoBehaviour
 
         GameObject goItem = (mCurrentItem as MonoBehaviour).gameObject;
 
-        inventory.RemoveItem(mCurrentItem);
+        inventory.DropRemovedItem(mCurrentItem);
 
         Rigidbody rbItem;
         //Throw animation
        
         rbItem = goItem.AddComponent<Rigidbody>();
+        
         if (rbItem != null)
         {
-            rbItem.isKinematic = true;
-            rbItem.AddForce(transform.forward * Time.deltaTime, ForceMode.Impulse);
-
+            rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
             Invoke("DoDropItem", 0.25f);
         }
     }
 
     public void DoDropItem()
     {
-        if (mCurrentItem != null)
-        {
-            Destroy((this.mCurrentItem as MonoBehaviour).GetComponent<Rigidbody>());
 
-            mCurrentItem = null;
+        if(gameObject.GetComponent<Rigidbody>() != null)
+        {
+            Destroy(gameObject.GetComponent<Rigidbody>());
         }
+        
     }
+
 
 
 

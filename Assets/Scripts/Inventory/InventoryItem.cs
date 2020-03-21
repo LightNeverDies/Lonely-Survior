@@ -11,6 +11,8 @@ public interface IInvetoryItem
 
     void OnDrop();
     void OnUse();
+
+    void DropItem();
 }
 
 public class InventoryEventArgs : EventArgs

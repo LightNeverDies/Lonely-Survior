@@ -59,4 +59,25 @@ public class Inventory : MonoBehaviour
             }
         }
     }
+
+    public void DropRemovedItem(IInvetoryItem item)
+    {
+        if (mItems.Contains(item))
+        {
+            mItems.Remove(item);
+
+            item.DropItem();
+
+            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
+            if (collider != null)
+            {
+                collider.enabled = true;
+            }
+            if (ItemRemoved != null)
+            {
+                ItemRemoved(this, new InventoryEventArgs(item));
+            }
+        }
+    }
+
 }

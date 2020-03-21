@@ -8,7 +8,6 @@ public class Campfire : MonoBehaviour
     public ParticleSystem Smoke;
 
     public hud Hud;
-    private bool _isTrigger= false;
 
     void Start()
     {
@@ -20,10 +19,6 @@ public class Campfire : MonoBehaviour
     void Update()
     {
         
-        /*if(Input.GetKeyDown(KeyCode.E))
-        {
-            Camp();
-        }*/
     }
 
     private void OnTriggerStay(Collider other)
