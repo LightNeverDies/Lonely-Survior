@@ -7,6 +7,11 @@ public class Campfire : MonoBehaviour
     public ParticleSystem Fire;
     public ParticleSystem Smoke;
 
+    private bool _isCausingDamage = false;
+    public float DamageRepeatRate = 0.1f;
+    public int DamageAmount = 1;
+
+    public bool Repeating = true;
     public hud Hud;
 
     void Start()
@@ -25,33 +30,78 @@ public class Campfire : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.E))
         {
-            Camp();
+            StartCoroutine(WaitForSecond());
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-            Hud.OpenHint("");
+        Hud.OpenHint("");
+        if(Fire.isPlaying && Smoke.isPlaying)
+        {
+            _isCausingDamage = true;
+
+            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+
+            if (player != null)
+            {
+                if (Repeating)
+                {
+                    StartCoroutine(TakeDamage(player, DamageRepeatRate));
+                }
+                else
+                {
+                    player.TakeDamage(DamageAmount);
+                }
+            }
+        }
+        else if(!Fire.isPlaying && !Smoke.isPlaying)
+        {
+            _isCausingDamage = false;
+        }
     }
     private void OnTriggerExit(Collider other)
     {
-            Hud.CloseHint();
+        Hud.CloseHint();
+            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                _isCausingDamage = false;
+            }
+
     }
 
 
-
-    private void Camp()
+    IEnumerator WaitForSecond()
     {
         if (Fire.isPlaying && Smoke.isPlaying)
         {
             Fire.Stop();
             Smoke.Stop();
+            
         }
         else
         {
             Fire.Play();
             Smoke.Play();
+            yield return new WaitForSeconds(10);
+            Fire.Stop();
+            Smoke.Stop();
+        }
+    }
+
+
+    IEnumerator TakeDamage(PlayerController player, float repeatRate)
+    {
+        while (_isCausingDamage)
+        {
+            player.TakeDamage(DamageAmount);
+            TakeDamage(player, repeatRate);
+            if (player.IsDead)
+            {
+                _isCausingDamage = false;
+            }
+            yield return new WaitForSeconds(repeatRate);
         }
     }
 

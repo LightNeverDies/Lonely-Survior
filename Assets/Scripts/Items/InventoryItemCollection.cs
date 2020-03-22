@@ -21,6 +21,7 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
         }
     }
 
+
     public virtual void OnUse()
     {
         transform.localPosition = PickPosition;

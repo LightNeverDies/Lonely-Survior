@@ -13,6 +13,7 @@ public interface IInvetoryItem
     void OnUse();
 
     void DropItem();
+
 }
 
 public class InventoryEventArgs : EventArgs
