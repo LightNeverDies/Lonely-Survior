@@ -51,6 +51,9 @@ public class hud : MonoBehaviour
             ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();
 
             //We found the item in the UI
+                if (itemDragHandler.Item == null)
+                    continue;
+
             if (itemDragHandler.Item.Equals(e.Item))
             {
                 image.enabled = false;

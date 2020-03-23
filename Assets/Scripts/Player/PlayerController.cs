@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         {
             if (mCurrentItem != null && Input.GetKey(KeyCode.G))
             {
-                DropCurrentItem();
+               DropCurrentItem();
             }
         }
     }
@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         inventory.ItemUsed += Inventory_ItemUsed;
         inventory.ItemRemoved += Inventory_ItemRemoved;
+
 
         mhealthBar = Hud.transform.Find("HealthBar").GetComponent<HealthBar>();
         mhealthBar.Min = 0;
@@ -108,43 +109,41 @@ public class PlayerController : MonoBehaviour
             SetItemActive(mCurrentItem,false);
         }
         IInvetoryItem item = e.Item;
-        /*        GameObject goItem = (item as MonoBehaviour).gameObject;
-                goItem.SetActive(true);
 
-                goItem.transform.parent = Hand.transform;*/
         SetItemActive(item, true);
 
         mCurrentItem = e.Item;
     }
-
+    private bool mLockPickUp = false;
     private void DropCurrentItem()
     {
-
-
-        animator.SetTrigger("drop");
-
+        mLockPickUp = true;
+        IInvetoryItem item = mCurrentItem;
         GameObject goItem = (mCurrentItem as MonoBehaviour).gameObject;
-
+        animator.SetTrigger("drop");
         inventory.DropRemovedItem(mCurrentItem);
-
-        Rigidbody rbItem;
-        //Throw animation
-       
-        rbItem = goItem.AddComponent<Rigidbody>();
         
+       
+        Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
         if (rbItem != null)
         {
             rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
+            if (mCurrentItem == null)
+            {
+                SetItemActive(mCurrentItem, false);
+            }
             Invoke("DoDropItem", 0.25f);
         }
     }
 
     public void DoDropItem()
     {
-
-        if(gameObject.GetComponent<Rigidbody>() != null)
+        mLockPickUp = false;
+        if (gameObject.GetComponent<Rigidbody>() != null)
         {
             Destroy(gameObject.GetComponent<Rigidbody>());
+            Destroy((mCurrentItem as MonoBehaviour).GetComponent<Rigidbody>());
+            mCurrentItem = null;
         }
         
     }
@@ -245,22 +244,28 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        IInvetoryItem item = other.GetComponent<IInvetoryItem>();
-        if (item != null)
+        if (!IsDead)
         {
-            mItemToPickup = item;
-            Hud.OpenMessagePanel("");
+            IInvetoryItem item = other.GetComponent<IInvetoryItem>();
+            if (item != null)
+            {
+                mItemToPickup = item;
+                Hud.OpenMessagePanel("");
+            }
         }
 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        IInvetoryItem item = other.GetComponent<IInvetoryItem>();
-        if (item != null)
+        if (!IsDead)
         {
-            Hud.CloseMessagePanel();
-            mItemToPickup = null;
+            IInvetoryItem item = other.GetComponent<IInvetoryItem>();
+            if (item != null)
+            {
+                Hud.CloseMessagePanel();
+                mItemToPickup = null;
+            }
         }
 
     }

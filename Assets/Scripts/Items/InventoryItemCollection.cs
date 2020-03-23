@@ -33,7 +33,7 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
         RaycastHit hit = new RaycastHit();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit,100))
         {
             gameObject.SetActive(true);
             gameObject.transform.position = hit.point;

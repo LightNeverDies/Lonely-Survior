@@ -21,7 +21,6 @@ public class Wind : MonoBehaviour
     {
         _isTrigger = false;
         int randomWait = Random.Range(5, 10);
-        //Debug.Log("Time:" + randomWait + "Play");
         yield return new WaitForSeconds(randomWait);
         animator.Play("Armature|Wind",0, 0.25f);
         _isTrigger = true;

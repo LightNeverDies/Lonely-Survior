@@ -34,16 +34,4 @@ public class ThirdPerson : MonoBehaviour
 
     }
 
-
-
-
-
-    /*    private void Camera_Start()
-        {
-            offset = transform.position - player.transform.position;
-        }
-        private void Camera_Update()
-        {
-            transform.position = player.transform.position + offset;
-        }*/
 }

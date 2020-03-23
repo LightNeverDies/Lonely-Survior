@@ -16,6 +16,7 @@ public class ItemDropHandler : MonoBehaviour, IDropHandler
             {
                 _Inventory.RemoveItem(item);
                 item.OnDrop();
+                
             }
         }
     }

@@ -5,8 +5,6 @@ using UnityEngine;
 public class DamageSource : MonoBehaviour
 {
     private bool _isCausingDamage = false;
-    // Start is called before the first frame update
-
 
     public float DamageRepeatRate = 0.1f;
     public int DamageAmount = 1;
