@@ -34,7 +34,7 @@ public class ItemClickHandler : MonoBehaviour
         graphic.CrossFadeColor(color, _button.colors.fadeDuration, true, true);
     }
 
-    private IInvetoryItem AttachedItem
+    private InventoryItemCollection AttachedItem
     {
         get
         {
@@ -45,7 +45,7 @@ public class ItemClickHandler : MonoBehaviour
     }
     public void OnItemClicked()
     {
-        IInvetoryItem item = AttachedItem;
+        InventoryItemCollection item = AttachedItem;
         if (item != null)
         {
             _Inventory.UseItem(item);

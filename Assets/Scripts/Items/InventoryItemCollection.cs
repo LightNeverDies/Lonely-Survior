@@ -1,26 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
+
+public enum EItemType
 {
-    public virtual string Name
+    Default,
+    Consumable,
+    Weapon
+}
+public class InteractableItemBase : MonoBehaviour
+{
+    public string Name;
+
+    public Sprite Image;
+
+    public string InteractText = "Press F to pickup the item";
+
+    public EItemType ItemType;
+
+    public virtual void OnInteractAnimation(Animator animator)
     {
-        get
-        {
-            return "_base item_";
-        }
+        animator.SetTrigger("tr_pickup");
     }
 
-    public Sprite _Image;
-    public Sprite Image
+    public virtual void OnInteract()
     {
-        get
-        {
-            return _Image;
-        }
     }
 
+    public virtual bool CanInteract(Collider other)
+    {
+        return true;
+    }
+}
+
+
+public class InventoryItemCollection : InteractableItemBase
+{
+    public InventorySlot Slot
+    {
+        get; set;
+    }
 
     public virtual void OnUse()
     {
@@ -32,8 +53,7 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
     {
         RaycastHit hit = new RaycastHit();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit,100))
+        if (Physics.Raycast(ray, out hit, 1000))
         {
             gameObject.SetActive(true);
             gameObject.transform.position = hit.point;
@@ -54,16 +74,20 @@ public class InventoryItemCollection : MonoBehaviour, IInvetoryItem
         }
     }
 
-
-    public virtual void onPickup()
+    public virtual void OnPickup()
     {
         Destroy(gameObject.GetComponent<Rigidbody>());
         gameObject.SetActive(false);
+
     }
 
-
     public Vector3 PickPosition;
+
     public Vector3 PickRotation;
 
     public Vector3 DropRotation;
+
+    public bool UseItemAfterPickup = false;
+
+
 }

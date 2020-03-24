@@ -16,10 +16,9 @@ public class PlayerController : MonoBehaviour
     CharacterController controller;
     Animator animator;
 
-    private IInvetoryItem mCurrentItem = null;
+    private InventoryItemCollection mCurrentItem = null;
 
-
-    private IInvetoryItem mItemToPickup = null;
+    private InteractableItemBase mInteractItem = null;
 
     public hud Hud;
 
@@ -41,6 +40,7 @@ public class PlayerController : MonoBehaviour
             if (mCurrentItem != null && Input.GetKey(KeyCode.G))
             {
                DropCurrentItem();
+                
             }
         }
     }
@@ -85,17 +85,19 @@ public class PlayerController : MonoBehaviour
 
     private void Inventory_ItemRemoved(object sender, InventoryEventArgs e)
     {
-        IInvetoryItem item = e.Item;
-        GameObject goItem = (item as MonoBehaviour).gameObject;
-        goItem.SetActive(true);
+        if (!IsDead)
+        {
+            InventoryItemCollection item = e.Item;
+            GameObject goItem = (item as MonoBehaviour).gameObject;
+            goItem.SetActive(true);
 
-        goItem.transform.parent = null;
-
-        if (item == mCurrentItem)
-            mCurrentItem = null;
+            goItem.transform.parent = null;
+            if (item == mCurrentItem)
+                mCurrentItem = null;
+        }
     }
 
-    private void SetItemActive(IInvetoryItem item , bool active)
+    private void SetItemActive(InventoryItemCollection item , bool active)
     {
         GameObject currentItem = (item as MonoBehaviour).gameObject;
         currentItem.SetActive(active);
@@ -104,21 +106,27 @@ public class PlayerController : MonoBehaviour
 
     private void Inventory_ItemUsed(object sender, InventoryEventArgs e)
     {
-        if(mCurrentItem != null)
-        {
-            SetItemActive(mCurrentItem,false);
-        }
-        IInvetoryItem item = e.Item;
 
-        SetItemActive(item, true);
+            if (e.Item.ItemType != EItemType.Consumable)
+            {
+                if (mCurrentItem != null)
+                {
+                    SetItemActive(mCurrentItem, false);
+                }
+                InventoryItemCollection item = e.Item;
 
-        mCurrentItem = e.Item;
+                SetItemActive(item, true);
+
+                mCurrentItem = e.Item;
+            }
     }
+
     private bool mLockPickUp = false;
+
     private void DropCurrentItem()
     {
         mLockPickUp = true;
-        IInvetoryItem item = mCurrentItem;
+        InventoryItemCollection item = mCurrentItem;
         GameObject goItem = (mCurrentItem as MonoBehaviour).gameObject;
         animator.SetTrigger("drop");
         inventory.DropRemovedItem(mCurrentItem);
@@ -133,7 +141,9 @@ public class PlayerController : MonoBehaviour
                 SetItemActive(mCurrentItem, false);
             }
             Invoke("DoDropItem", 0.25f);
+            
         }
+        
     }
 
     public void DoDropItem()
@@ -160,12 +170,12 @@ public class PlayerController : MonoBehaviour
             Movement();
             Gestures();
             Attack();
-            if (mItemToPickup != null && Input.GetKeyDown(KeyCode.F))
+            if (mInteractItem != null && Input.GetKeyDown(KeyCode.F))
             {
-                animator.SetTrigger("tr_pickup");
-                inventory.AddItem(mItemToPickup);
-                mItemToPickup.onPickup();
-                Hud.CloseMessagePanel();
+                // Interact animation
+                mInteractItem.OnInteractAnimation(animator);
+                InteractWithItem();
+
             }
         }
         
@@ -240,16 +250,38 @@ public class PlayerController : MonoBehaviour
             controller.Move(_moveDir * Time.deltaTime);
         
     }
+    public void InteractWithItem()
+    {
+        if (mInteractItem != null)
+        {
+            mInteractItem.OnInteract();
 
+            if (mInteractItem is InventoryItemCollection)
+            {
+                InventoryItemCollection inventoryItem = mInteractItem as InventoryItemCollection;
+                inventory.AddItem(inventoryItem);
+                inventoryItem.OnPickup();
+
+                if (inventoryItem.UseItemAfterPickup)
+                {
+                    inventory.UseItem(inventoryItem);
+                }
+            }
+        }
+
+        Hud.CloseMessagePanel();
+
+        mInteractItem = null;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!IsDead)
         {
-            IInvetoryItem item = other.GetComponent<IInvetoryItem>();
+            InventoryItemCollection item = other.GetComponent<InventoryItemCollection>();
             if (item != null)
             {
-                mItemToPickup = item;
+                mInteractItem = item;
                 Hud.OpenMessagePanel("");
             }
         }
@@ -260,11 +292,11 @@ public class PlayerController : MonoBehaviour
     {
         if (!IsDead)
         {
-            IInvetoryItem item = other.GetComponent<IInvetoryItem>();
+            InventoryItemCollection item = other.GetComponent<InventoryItemCollection>();
             if (item != null)
             {
                 Hud.CloseMessagePanel();
-                mItemToPickup = null;
+                mInteractItem = null;
             }
         }
 

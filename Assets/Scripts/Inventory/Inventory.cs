@@ -7,32 +7,59 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     private const int SLOTS = 9;
-    private List<IInvetoryItem> mItems = new List<IInvetoryItem>();
+    private List<InventorySlot> mSlots = new List<InventorySlot>();
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemRemoved;
     public event EventHandler<InventoryEventArgs> ItemUsed;
 
-    public void AddItem(IInvetoryItem item)
+    public Inventory()
     {
-        if (mItems.Count < SLOTS)
+        for(int i =0; i<SLOTS; i++)
         {
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            if (collider.enabled)
-            {
-                collider.enabled = false;
-
-                mItems.Add(item);
-
-                item.onPickup();
-                if (ItemAdded != null)
-                {
-                    ItemAdded(this, new InventoryEventArgs(item));
-                }
-            }
+            mSlots.Add(new InventorySlot(i));
         }
     }
 
-    internal void UseItem(IInvetoryItem item)
+    private InventorySlot FindStackableSlot(InventoryItemCollection item)
+    {
+        foreach(InventorySlot slot in mSlots)
+        {
+            if(slot.IsStackable(item))
+            { return slot; }
+        }
+        return null;
+    }
+
+    private InventorySlot FindNextEmptySlot()
+    {
+        foreach(InventorySlot slot in mSlots)
+        {
+            if (slot.IsEmpty)
+                return slot;
+        }
+        return null;
+    }
+
+    public void AddItem(InventoryItemCollection item)
+    {
+        InventorySlot freeSlot = FindStackableSlot(item);
+        if(freeSlot == null)
+        {
+            freeSlot = FindNextEmptySlot();
+        }
+        if(freeSlot != null)
+        {
+            freeSlot.AddItem(item);
+               
+            if (ItemAdded != null)
+            {
+              ItemAdded(this, new InventoryEventArgs(item));
+            }    
+        }
+        
+    }
+
+    internal void UseItem(InventoryItemCollection item)
     {
         if (ItemUsed != null)
         {
@@ -40,42 +67,33 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void RemoveItem(IInvetoryItem item)
+    public void RemoveItem(InventoryItemCollection item)
     {
-        if(mItems.Contains(item))
+        foreach(InventorySlot slot in mSlots)
         {
-            mItems.Remove(item);
-
-            item.OnDrop();
-
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            if (collider != null)
+            if(slot.Remove(item))
             {
-                collider.enabled = true;
-            }
-            if(ItemRemoved !=null)
-            {
-                ItemRemoved(this, new InventoryEventArgs(item));
+                if (ItemRemoved != null)
+                {
+                    ItemRemoved(this, new InventoryEventArgs(item));
+                }
+                break;
             }
         }
+        
     }
 
-    public void DropRemovedItem(IInvetoryItem item)
+    public void DropRemovedItem(InventoryItemCollection item)
     {
-        if (mItems.Contains(item))
+        foreach(InventorySlot slot in mSlots)
         {
-            mItems.Remove(item);
-
-            item.DropItem();
-
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            if (collider != null)
+            if (slot.Remove(item))
             {
-                collider.enabled = true;
-            }
-            if (ItemRemoved != null)
-            {
-                ItemRemoved(this, new InventoryEventArgs(item));
+                if (ItemRemoved != null)
+                {
+                    ItemRemoved(this, new InventoryEventArgs(item));
+                }
+                break;
             }
         }
     }
