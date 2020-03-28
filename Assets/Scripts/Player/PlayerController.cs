@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private HealthBar mhealthBar;
 
     public int Health = 100;
+    private int startHealth;
 
 
 
@@ -57,7 +58,10 @@ public class PlayerController : MonoBehaviour
         mhealthBar = Hud.transform.Find("HealthBar").GetComponent<HealthBar>();
         mhealthBar.Min = 0;
         mhealthBar.Max = Health;
-        
+        startHealth = Health;
+        mhealthBar.SetHealth(Health);
+
+
     }
     public bool IsDead
     {
@@ -79,8 +83,16 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("death");
         }
     }
+    public void Rehab(int amount)
+    {
+        Health += amount;
+        if (Health > startHealth)
+        {
+            Health = startHealth;
+        }
 
-
+        mhealthBar.SetHealth(Health);
+    }
 
 
     private void Inventory_ItemRemoved(object sender, InventoryEventArgs e)
@@ -199,12 +211,16 @@ public class PlayerController : MonoBehaviour
     {
         if(controller.isGrounded)
         {
-            if (mCurrentItem != null && Input.GetMouseButtonDown(0))
+            if (mCurrentItem != null && Input.GetMouseButtonDown(0) && mCurrentItem.ItemType == EItemType.Weapon)
             {
                 animator.SetTrigger("attack");
             }
         }
     }
+
+
+
+    
     private void Movement()
     {
 
