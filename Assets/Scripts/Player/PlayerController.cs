@@ -199,11 +199,12 @@ public class PlayerController : MonoBehaviour
         {
             if(Input.GetKey(KeyCode.H))
             {
-                animator.SetBool("Gestures", true);
+                animator.SetBool("Gestures", true);        
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
                 animator.SetBool("Gestures", false);
+
             }
         }
     }
@@ -235,6 +236,7 @@ public class PlayerController : MonoBehaviour
             if (controller.isGrounded)
             {
                 move = (v > 0) || (h != 0);
+                Speed = 10.0f;
 
                 animator.SetBool("run", move);
 

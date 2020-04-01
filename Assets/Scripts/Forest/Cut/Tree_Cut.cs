@@ -44,41 +44,34 @@ public class Tree_Cut : MonoBehaviour
        
     }
 
+    [System.Obsolete]
     private void OnTriggerStay(Collider other)
     {
         InteractableItemBase item = Weapon.gameObject.GetComponent<InteractableItemBase>();
         InventoryItemCollection mCurrentItem = Weapon.gameObject.GetComponent<InventoryItemCollection>();
+
         int MaxHitCount = Random.Range(3, 5);
 
-        if (Input.GetMouseButtonDown(0))
+        if (player.Hand.transform.Find("Wooden Axe") && Input.GetMouseButtonDown(0))
         {
-            if (Weapon.activeSelf)
+            if (mCurrentItem.ItemType == EItemType.Weapon)
             {
-                if (mCurrentItem.ItemType == EItemType.Weapon)
+                //Debug.Log(item);
+                mHitCount++;
+                var pos = HitEffectPosition.transform.position;
+
+                // Play hit sound
+                var hitEffect = (GameObject)Instantiate(HitEffect, pos, transform.rotation, transform.parent);
+                Destroy(hitEffect, 1.5f);
+
+                if (mHitCount >= MaxHitCount)
                 {
-                    Debug.Log(item);
-                    mHitCount++;
-                    var pos = HitEffectPosition.transform.position;
-
-                    // Play hit sound
-                    var hitEffect = (GameObject)Instantiate(HitEffect, pos, transform.rotation, transform.parent);
-                    Destroy(hitEffect, 1.5f);
-
-                    if (mHitCount >= MaxHitCount)
-                    {
-                        Fall();
-                    }
+                    Fall();
                 }
             }
         }
-    }
-
-    private void Attack()
-    {
         
     }
-
-
 
 
 }
