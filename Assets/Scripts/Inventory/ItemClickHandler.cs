@@ -7,24 +7,31 @@ public class ItemClickHandler : MonoBehaviour
 {
     public Inventory _Inventory;
     public KeyCode _Key;
+    public PlayerController Player;
+    public GameObject player;
 
     private Button _button;
 
     private void Awake()
     {
+        player = GameObject.Find("Player");
         _button = GetComponent<Button>();
+        Player = player.GetComponent<PlayerController>();
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(_Key))
+        if (!Player.IsDead)
         {
-            FadeToColor(_button.colors.pressedColor);
-            _button.onClick.Invoke();
-        }
-        else if(Input.GetKeyUp(_Key))
-        {
-            FadeToColor(_button.colors.normalColor);
+            if (Input.GetKeyDown(_Key))
+            {
+                FadeToColor(_button.colors.pressedColor);
+                _button.onClick.Invoke();
+            }
+            else if (Input.GetKeyUp(_Key))
+            {
+                FadeToColor(_button.colors.normalColor);
+            }
         }
     }
 
@@ -45,11 +52,14 @@ public class ItemClickHandler : MonoBehaviour
     }
     public void OnItemClicked()
     {
-        InventoryItemCollection item = AttachedItem;
-        if (item != null)
+        if (!Player.IsDead)
         {
-            _Inventory.UseItem(item);
-            item.OnUse();
+            InventoryItemCollection item = AttachedItem;
+            if (item != null)
+            {
+                _Inventory.UseItem(item);
+                item.OnUse();
+            }
         }
 
         

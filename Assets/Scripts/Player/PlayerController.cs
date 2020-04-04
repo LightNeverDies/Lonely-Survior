@@ -28,9 +28,20 @@ public class PlayerController : MonoBehaviour
     private Vector3 _moveDir = Vector3.zero;
 
     private HealthBar mhealthBar;
+    private HealthBar mfoodBar;
+    private HealthBar mwaterBar;
 
     public int Health = 100;
+    public int Food = 100;
+    public int Water = 100;
+
     private int startHealth;
+    private int startFood;
+    private int startWater;
+
+    public float HungerRate = 1.5f;
+    public float WaterRate = 2.0f;
+    public float HealthRate = 5.0f;
 
 
 
@@ -61,8 +72,26 @@ public class PlayerController : MonoBehaviour
         startHealth = Health;
         mhealthBar.SetHealth(Health);
 
+        mfoodBar = Hud.transform.Find("FoodBar").GetComponent<HealthBar>();
+        mfoodBar.Min = 0;
+        mfoodBar.Max = Food;
+        startFood = Food;
+        mfoodBar.SetFood(Food);
+
+        mwaterBar = Hud.transform.Find("WaterBar").GetComponent<HealthBar>();
+        mwaterBar.Min = 0;
+        mwaterBar.Max = Water;
+        startWater = Water;
+        mwaterBar.SetWater(Water);
+
+        InvokeRepeating("IncreaseHunger", 0, HungerRate);
+        InvokeRepeating("IncreaseWater", 0, WaterRate);
+        InvokeRepeating("IncreaseHealth", 0, HealthRate);
 
     }
+
+
+    #region Player Statistic
     public bool IsDead
     {
         get
@@ -93,6 +122,88 @@ public class PlayerController : MonoBehaviour
 
         mhealthBar.SetHealth(Health);
     }
+
+    public void Eat(int amount)
+    {
+        Food += amount;
+        if (Food > startFood)
+        {
+            Food = startFood;
+        }
+
+        mfoodBar.SetFood(Food);
+        if(Food > 0)
+        {
+            IncreaseHunger();
+        }
+
+    }
+
+    public void Drink(int amount)
+    {
+        Water += amount;
+        if (Water > startWater)
+        {
+            Water = startWater;
+        }
+
+        mwaterBar.SetWater(Water);
+        if (Water > 0)
+        {
+            IncreaseWater();
+        }
+    }
+
+    public void IncreaseHunger()
+    {
+        if (!IsDead)
+        {
+            Food--;
+            if (Food < 0)
+                Food = 0;
+
+            mfoodBar.SetFood(Food);
+        }
+
+    }
+
+    public void IncreaseWater()
+    {
+        if (!IsDead)
+        {
+            Water--;
+            if (Water < 0)
+                Water = 0;
+
+            mwaterBar.SetWater(Water);
+        }
+        
+
+    }
+    public void IncreaseHealth()
+    {
+        if (Water == 0)
+        {
+            Health--;
+            mhealthBar.SetHealth(Health);
+        }
+        if (Food == 0)
+        {
+            Health--;
+            mhealthBar.SetHealth(Health);
+        }
+        if (Health == 0)
+        {
+            if (IsDead)
+            {
+                CancelInvoke("IncreaseHealth");
+            }
+        }
+    }
+
+
+    #endregion
+
 
 
     private void Inventory_ItemRemoved(object sender, InventoryEventArgs e)

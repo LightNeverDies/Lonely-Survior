@@ -5,6 +5,7 @@ using UnityEngine;
 public class Fruit : MonoBehaviour
 {
     public GameObject fruit;
+    public GameObject bush;
     bool isSpawn = false;
     List<GameObject> goList = new List<GameObject>();
  
@@ -18,8 +19,9 @@ public class Fruit : MonoBehaviour
            Vector3 fruitPos = new Vector3(this.transform.position.x + Random.Range(1.9f, 5.0f),
                                            this.transform.position.y + Random.Range(1.5f, 2.0f),
                                            this.transform.position.z + Random.Range(1.9f, 5.0f));
-           Instantiate(fruit, fruitPos, Quaternion.identity);
-           goList.Add(fruit);
+         GameObject clone = (GameObject)Instantiate(fruit, fruitPos, Quaternion.identity);
+         clone.transform.parent = transform;
+         goList.Add(fruit);
             
         }
         Debug.Log(goList.Count);
@@ -34,7 +36,7 @@ public class Fruit : MonoBehaviour
 
     void Respawn()
     {
-        if (GameObject.Find("BlueBerry(Clone)") == null)
+        if(bush.transform.Find("BlueBerry(Clone)") == null)
         {
 
             Debug.Log("There is no more blueberries left in bush.");

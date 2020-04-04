@@ -35,7 +35,44 @@ public class HealthBar : MonoBehaviour
             Imghealth.fillAmount = mCurrentPercent;
         }
     }
+    public void SetFood(int health)
+    {
+        if (health != mCurrentValue)
+        {
+            if (Max - Min == 0)
+            {
+                mCurrentValue = 0;
+                mCurrentPercent = 0;
+            }
+            else
+            {
+                mCurrentValue = health;
+                mCurrentPercent = (float)mCurrentValue / (float)(Max - Min);
+            }
 
+            health_Text.text = string.Format("Food: {0} %", Mathf.RoundToInt(mCurrentPercent * 100));
+            Imghealth.fillAmount = mCurrentPercent;
+        }
+    }
+    public void SetWater(int health)
+    {
+        if (health != mCurrentValue)
+        {
+            if (Max - Min == 0)
+            {
+                mCurrentValue = 0;
+                mCurrentPercent = 0;
+            }
+            else
+            {
+                mCurrentValue = health;
+                mCurrentPercent = (float)mCurrentValue / (float)(Max - Min);
+            }
+
+            health_Text.text = string.Format("Water: {0} %", Mathf.RoundToInt(mCurrentPercent * 100));
+            Imghealth.fillAmount = mCurrentPercent;
+        }
+    }
 
     public float CurrentPercent
     {
