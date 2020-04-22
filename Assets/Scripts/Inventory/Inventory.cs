@@ -24,8 +24,10 @@ public class Inventory : MonoBehaviour
     {
         foreach(InventorySlot slot in mSlots)
         {
-            if(slot.IsStackable(item))
-            { return slot; }
+          if (slot.IsStackable(item))
+          {
+             return slot;
+          }
         }
         return null;
     }

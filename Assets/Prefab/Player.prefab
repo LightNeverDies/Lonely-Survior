@@ -571,6 +571,11 @@ MonoBehaviour:
   Hand: {fileID: 8673933594826794250}
   Hud: {fileID: 1572594789305686635, guid: 11ca1120608397e448c6d3107c46eccb, type: 3}
   Health: 100
+  Food: 100
+  Water: 100
+  HungerRate: 1.5
+  WaterRate: 2
+  HealthRate: 5
 --- !u!1 &8673933593677057561
 GameObject:
   m_ObjectHideFlags: 0

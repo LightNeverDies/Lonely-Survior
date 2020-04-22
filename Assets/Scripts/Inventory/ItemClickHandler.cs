@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ItemClickHandler : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class ItemClickHandler : MonoBehaviour
     public KeyCode _Key;
     public PlayerController Player;
     public GameObject player;
+
+    public float tapSpeed = 0.5f;
+    private float lastTapTime = 0;
 
     private Button _button;
 
@@ -23,14 +27,31 @@ public class ItemClickHandler : MonoBehaviour
     {
         if (!Player.IsDead)
         {
-            if (Input.GetKeyDown(_Key))
+            InventoryItemCollection item = AttachedItem;
+            if (item != null)
             {
-                FadeToColor(_button.colors.pressedColor);
-                _button.onClick.Invoke();
-            }
-            else if (Input.GetKeyUp(_Key))
-            {
-                FadeToColor(_button.colors.normalColor);
+                if (Input.GetKeyDown(_Key))
+                {
+                    FadeToColor(_button.colors.pressedColor);
+                    _button.onClick.Invoke();
+                    if ((Time.time - lastTapTime) < tapSpeed)
+                    {
+                        if (item.ItemType != EItemType.Consumable)
+                        {
+                            if (item != null)
+                            {
+                                Debug.Log("Double tap");
+                                item.gameObject.SetActive(false);
+                                item.transform.parent = null;
+                            }
+                        }
+                    }
+                    lastTapTime = Time.time;
+                }
+                else if (Input.GetKeyUp(_Key))
+                {
+                    FadeToColor(_button.colors.normalColor);
+                }
             }
         }
     }
@@ -60,8 +81,7 @@ public class ItemClickHandler : MonoBehaviour
                 _Inventory.UseItem(item);
                 item.OnUse();
             }
-        }
+        }  
+    }
 
-        
-    } 
 }

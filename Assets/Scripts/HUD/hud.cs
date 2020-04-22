@@ -71,6 +71,7 @@ public class hud : MonoBehaviour
             if (itemDragHandler.Item == null)
                 continue;
 
+ 
             // Found the slot to remove from
             if (e.Item.Slot.Id == index)
             {
@@ -90,6 +91,7 @@ public class hud : MonoBehaviour
                 {
                     image.enabled = false;
                     image.sprite = null;
+
                 }
                 break;
             }

@@ -5,16 +5,17 @@ using UnityEngine;
 public class ThirdPerson : MonoBehaviour
 {
     //public GameObject player;
-     private Vector3 targetPosition;
+    private Vector3 targetPosition;
 
-     [SerializeField]
-     private float distanceAway=2;
-     [SerializeField]
-     private float distanceUp=2;
-     [SerializeField]
-     private float smooth=1;
-     [SerializeField]
-     private Transform follow;
+    [SerializeField]
+    private float distanceAway = 2;
+    [SerializeField]
+    private float distanceUp = 2;
+    [SerializeField]
+    private float smooth = 1;
+    [SerializeField]
+    private Transform follow;
+
 
 
     void Start()
@@ -33,5 +34,6 @@ public class ThirdPerson : MonoBehaviour
         transform.LookAt(follow);
 
     }
+
 
 }

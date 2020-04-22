@@ -20,6 +20,8 @@ public class InteractableItemBase : MonoBehaviour
 
     public EItemType ItemType;
 
+    public int amount;
+
     public virtual void OnInteractAnimation(Animator animator)
     {
         animator.SetTrigger("tr_pickup");
@@ -48,6 +50,7 @@ public class InventoryItemCollection : InteractableItemBase
         transform.localPosition = PickPosition;
         transform.localEulerAngles = PickRotation;
     }
+
 
     public virtual void OnDrop()
     {

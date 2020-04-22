@@ -51,7 +51,6 @@ public class Tree_Cut : MonoBehaviour
         InventoryItemCollection mCurrentItem = Weapon.gameObject.GetComponent<InventoryItemCollection>();
 
         int MaxHitCount = Random.Range(3, 5);
-
         if (player.Hand.transform.Find("Wooden Axe") && Input.GetMouseButtonDown(0))
         {
             if (mCurrentItem.ItemType == EItemType.Weapon)

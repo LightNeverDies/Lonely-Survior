@@ -24,7 +24,7 @@ public class Fruit : MonoBehaviour
          goList.Add(fruit);
             
         }
-        Debug.Log(goList.Count);
+        //Debug.Log(goList.Count);
         Invoke("Respawn", 120f);
     }
 
@@ -39,14 +39,14 @@ public class Fruit : MonoBehaviour
         if(bush.transform.Find("BlueBerry(Clone)") == null)
         {
 
-            Debug.Log("There is no more blueberries left in bush.");
+            //Debug.Log("There is no more blueberries left in bush.");
             isSpawn = true;
             goList = new List<GameObject>();
             Invoke("SpawnFruits", 60f);
         }
         else
         {
-            Debug.Log("There are more blueberries left in bush.");
+           //Debug.Log("There are more blueberries left in bush.");
             Invoke("Respawn", 120f);
         }
     }

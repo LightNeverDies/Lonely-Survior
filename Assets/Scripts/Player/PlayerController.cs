@@ -90,7 +90,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     #region Player Statistic
     public bool IsDead
     {
@@ -109,8 +108,13 @@ public class PlayerController : MonoBehaviour
         mhealthBar.SetHealth(Health);
         if (IsDead)
         {
-            animator.SetTrigger("death");
+            Dead();
         }
+    }
+
+    public void Dead()
+    {
+        animator.SetTrigger("death");
     }
     public void Rehab(int amount)
     {
@@ -184,20 +188,32 @@ public class PlayerController : MonoBehaviour
     {
         if (Water == 0)
         {
-            Health--;
-            mhealthBar.SetHealth(Health);
+            if (!IsDead)
+            {
+                Health--;
+                mhealthBar.SetHealth(Health);
+            }
+            else
+            {
+                CancelInvoke("IncreaseWater");
+            }
         }
         if (Food == 0)
         {
-            Health--;
-            mhealthBar.SetHealth(Health);
-        }
-        if (Health == 0)
-        {
-            if (IsDead)
+            if (!IsDead)
             {
-                CancelInvoke("IncreaseHealth");
+                Health--;
+                mhealthBar.SetHealth(Health);
             }
+            else
+            {
+                CancelInvoke("IncreaseHunger");
+            }
+        }
+        if(IsDead)
+        {
+           CancelInvoke("IncreaseHealth");
+           Dead();
         }
     }
 
@@ -229,19 +245,18 @@ public class PlayerController : MonoBehaviour
 
     private void Inventory_ItemUsed(object sender, InventoryEventArgs e)
     {
+       if (e.Item.ItemType != EItemType.Consumable)
+       {
+         if (mCurrentItem != null)
+         {
+            SetItemActive(mCurrentItem, false);
+         }
+            InventoryItemCollection item = e.Item;
 
-            if (e.Item.ItemType != EItemType.Consumable)
-            {
-                if (mCurrentItem != null)
-                {
-                    SetItemActive(mCurrentItem, false);
-                }
-                InventoryItemCollection item = e.Item;
+            SetItemActive(item, true);
 
-                SetItemActive(item, true);
-
-                mCurrentItem = e.Item;
-            }
+            mCurrentItem = e.Item;
+       }
     }
 
     private bool mLockPickUp = false;
@@ -281,7 +296,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-
+    
 
 
     // Update is called once per frame
@@ -323,9 +338,12 @@ public class PlayerController : MonoBehaviour
     {
         if(controller.isGrounded)
         {
-            if (mCurrentItem != null && Input.GetMouseButtonDown(0) && mCurrentItem.ItemType == EItemType.Weapon)
+            if (mCurrentItem != null)
             {
-                animator.SetTrigger("attack");
+                if (mCurrentItem.transform.parent != null && Input.GetMouseButtonDown(0) && mCurrentItem.ItemType == EItemType.Weapon)
+                {
+                    animator.SetTrigger("attack");
+                }
             }
         }
     }
@@ -361,8 +379,6 @@ public class PlayerController : MonoBehaviour
                     Speed = 25.0f;
                     move = (v > 0) || (h != 0);
 
-                    animator.SetBool("run", move);
-
                     _moveDir = Vector3.forward * v;
 
                     _moveDir = transform.TransformDirection(_moveDir);
@@ -372,6 +388,7 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.SetBool("run", false);
                     _moveDir = new Vector3(0, 0, 0);
+                // Starting Idle animation
                 }
             }
             _moveDir.y -= Gravity * Time.deltaTime;

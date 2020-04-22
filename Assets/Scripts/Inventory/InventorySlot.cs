@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -7,7 +6,6 @@ public class InventorySlot
 {
     private Stack<InventoryItemCollection> mItemStack = new Stack<InventoryItemCollection>();
     private int mId = 0;
-
     public InventorySlot(int id)
     {
         mId = id;
@@ -38,9 +36,14 @@ public class InventorySlot
             return false;
 
         InventoryItemCollection first = mItemStack.Peek();
-
-        if (first.Name == item.Name)
+        if (first.ItemType == EItemType.Weapon)
+        {
+            return false;
+        }
+        else if (first.Name == item.Name)
+        {
             return true;
+        }
 
         return false;
     }

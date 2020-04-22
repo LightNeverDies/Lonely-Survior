@@ -21,7 +21,6 @@ public class DayNight : MonoBehaviour
     [SerializeField]
     private Gradient sunColor;
 
-
     [Header("Modules")]
     private List<DN_Modulebase> modulList = new List<DN_Modulebase>();
 

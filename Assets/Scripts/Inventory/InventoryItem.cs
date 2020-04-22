@@ -11,5 +11,6 @@ public class InventoryEventArgs : EventArgs
       Item = item;
     }
     public InventoryItemCollection Item;
+
 }
 
