@@ -122,6 +122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
+  player: {fileID: 0}
+  Player: {fileID: 0}
 --- !u!1 &2607846093463608508
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,6 +832,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 53
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483236502977742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,6 +1428,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 51
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483236733072863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,6 +1576,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 54
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483236764866137
 GameObject:
   m_ObjectHideFlags: 0
@@ -1867,6 +1878,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 50
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483236827375053
 GameObject:
   m_ObjectHideFlags: 0
@@ -2085,6 +2099,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 55
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483236953657436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2934,6 +2951,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 57
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483237323892145
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,6 +3262,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 52
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483237495738624
 GameObject:
   m_ObjectHideFlags: 0
@@ -4548,6 +4571,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 49
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483238072094981
 GameObject:
   m_ObjectHideFlags: 0
@@ -4845,6 +4871,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Inventory: {fileID: 0}
   _Key: 56
+  Player: {fileID: 0}
+  player: {fileID: 0}
+  tapSpeed: 0.5
 --- !u!1 &2609483238143759815
 GameObject:
   m_ObjectHideFlags: 0

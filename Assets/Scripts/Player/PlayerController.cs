@@ -90,6 +90,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void GuardianKill()
+    {
+        TakeDamage(100);
+    }
+
     #region Player Statistic
     public bool IsDead
     {
@@ -108,7 +113,8 @@ public class PlayerController : MonoBehaviour
         mhealthBar.SetHealth(Health);
         if (IsDead)
         {
-            Dead();
+            //Dead();
+            // Might be problem soon.
         }
     }
 
@@ -236,7 +242,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetItemActive(InventoryItemCollection item , bool active)
+    public void SetItemActive(InventoryItemCollection item , bool active)
     {
         GameObject currentItem = (item as MonoBehaviour).gameObject;
         currentItem.SetActive(active);
@@ -338,7 +344,7 @@ public class PlayerController : MonoBehaviour
     {
         if(controller.isGrounded)
         {
-            if (mCurrentItem != null)
+            if (mCurrentItem != null && !EventSystem.current.IsPointerOverGameObject())
             {
                 if (mCurrentItem.transform.parent != null && Input.GetMouseButtonDown(0) && mCurrentItem.ItemType == EItemType.Weapon)
                 {

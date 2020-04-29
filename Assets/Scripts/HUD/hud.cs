@@ -10,6 +10,8 @@ public class hud : MonoBehaviour
     public GameObject MessagePanel;
 
     public GameObject Hint;
+
+    public GameObject NPCDialog;
     void Start()
     {
         Inventory.ItemAdded += InventoryScript_ItemAdded;
@@ -116,6 +118,16 @@ public class hud : MonoBehaviour
     public void CloseHint()
     {
         Hint.SetActive(false);
+    }
+
+    public void OpenNPCDialog()
+    {
+        NPCDialog.SetActive(true);
+    }
+
+    public void CloseNPCDialog()
+    {
+        NPCDialog.SetActive(false);
     }
 
 
