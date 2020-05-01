@@ -12,6 +12,8 @@ public class hud : MonoBehaviour
     public GameObject Hint;
 
     public GameObject NPCDialog;
+
+    public GameObject Shadow;
     void Start()
     {
         Inventory.ItemAdded += InventoryScript_ItemAdded;
@@ -73,7 +75,7 @@ public class hud : MonoBehaviour
             if (itemDragHandler.Item == null)
                 continue;
 
- 
+
             // Found the slot to remove from
             if (e.Item.Slot.Id == index)
             {
@@ -129,6 +131,5 @@ public class hud : MonoBehaviour
     {
         NPCDialog.SetActive(false);
     }
-
 
 }

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 
 public class PlayerController : MonoBehaviour
 {
 
-
-
     public Inventory inventory;
+
     public GameObject Hand;
+
     CharacterController controller;
+
     Animator animator;
 
     private InventoryItemCollection mCurrentItem = null;
@@ -25,6 +22,7 @@ public class PlayerController : MonoBehaviour
     float Speed = 10.0f;
     float RotationSpeed = 80.0f;
     float Gravity = 10.0f;
+
     private Vector3 _moveDir = Vector3.zero;
 
     private HealthBar mhealthBar;
@@ -42,8 +40,6 @@ public class PlayerController : MonoBehaviour
     public float HungerRate = 1.5f;
     public float WaterRate = 2.0f;
     public float HealthRate = 5.0f;
-
-
 
     void FixedUpdate()
     {
@@ -87,13 +83,14 @@ public class PlayerController : MonoBehaviour
         InvokeRepeating("IncreaseHunger", 0, HungerRate);
         InvokeRepeating("IncreaseWater", 0, WaterRate);
         InvokeRepeating("IncreaseHealth", 0, HealthRate);
-
+        
     }
 
     public void GuardianKill()
     {
         TakeDamage(100);
     }
+
 
     #region Player Statistic
     public bool IsDead
@@ -190,6 +187,7 @@ public class PlayerController : MonoBehaviour
         
 
     }
+
     public void IncreaseHealth()
     {
         if (Water == 0)
@@ -302,13 +300,9 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    
-
-
     // Update is called once per frame
     void Update()
     {
-
         if (!IsDead)
         {
             Movement();
@@ -322,7 +316,6 @@ public class PlayerController : MonoBehaviour
 
             }
         }
-        
     }
 
     private void Gestures()
@@ -354,9 +347,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
-    
     private void Movement()
     {
 
@@ -453,8 +443,5 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
-
-
 
 }

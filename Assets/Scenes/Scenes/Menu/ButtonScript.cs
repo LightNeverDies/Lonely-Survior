@@ -14,14 +14,12 @@ public class ButtonScript : MonoBehaviour
 
     public void MouseEnterUI()
     {
-        Debug.Log("Entry");
         //Button is changing his size when mouse is inside it.
         // button.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 400);
         uiText.color = Color.red;
     }
     public void MouseExitUI()
     {
-        Debug.Log("Exit");
         // Button is going to his default settings from Inspector Menu.
         // button.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 320);
         uiText.color = Color.white;

@@ -59,7 +59,6 @@ public class GuardianDialog : MonoBehaviour
 
         if (buttonPressed == disagree)
         {
-            //animator.SetTrigger("tr_attack_1");
             animator.Play("Armature|Attack");
             player.GuardianKill();
             Hud.CloseNPCDialog();
