@@ -36,7 +36,7 @@ public class Campfire : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Hud.OpenHint("");
+        Hud.OpenHint();
         if(Fire.isPlaying && Smoke.isPlaying)
         {
             _isCausingDamage = true;

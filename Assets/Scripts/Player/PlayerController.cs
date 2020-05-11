@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 
@@ -17,11 +18,14 @@ public class PlayerController : MonoBehaviour
 
     private InteractableItemBase mInteractItem = null;
 
+
     public hud Hud;
 
     float Speed = 10.0f;
     float RotationSpeed = 80.0f;
     float Gravity = 10.0f;
+
+    bool isAttacking = false;
 
     private Vector3 _moveDir = Vector3.zero;
 
@@ -41,14 +45,18 @@ public class PlayerController : MonoBehaviour
     public float WaterRate = 2.0f;
     public float HealthRate = 5.0f;
 
+    public float AttackRate = 1.0f;
+
+    float nextAttack = 0f;
+
     void FixedUpdate()
     {
         if (!IsDead)
         {
             if (mCurrentItem != null && Input.GetKey(KeyCode.G))
             {
-               DropCurrentItem();
-                
+                DropCurrentItem();
+
             }
         }
     }
@@ -83,7 +91,8 @@ public class PlayerController : MonoBehaviour
         InvokeRepeating("IncreaseHunger", 0, HungerRate);
         InvokeRepeating("IncreaseWater", 0, WaterRate);
         InvokeRepeating("IncreaseHealth", 0, HealthRate);
-        
+
+
     }
 
     public void GuardianKill()
@@ -139,7 +148,7 @@ public class PlayerController : MonoBehaviour
         }
 
         mfoodBar.SetFood(Food);
-        if(Food > 0)
+        if (Food > 0)
         {
             IncreaseHunger();
         }
@@ -184,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
             mwaterBar.SetWater(Water);
         }
-        
+
 
     }
 
@@ -214,10 +223,10 @@ public class PlayerController : MonoBehaviour
                 CancelInvoke("IncreaseHunger");
             }
         }
-        if(IsDead)
+        if (IsDead)
         {
-           CancelInvoke("IncreaseHealth");
-           Dead();
+            Dead();
+            CancelInvoke("IncreaseHealth");
         }
     }
 
@@ -240,7 +249,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetItemActive(InventoryItemCollection item , bool active)
+    public void SetItemActive(InventoryItemCollection item, bool active)
     {
         GameObject currentItem = (item as MonoBehaviour).gameObject;
         currentItem.SetActive(active);
@@ -249,18 +258,18 @@ public class PlayerController : MonoBehaviour
 
     private void Inventory_ItemUsed(object sender, InventoryEventArgs e)
     {
-       if (e.Item.ItemType != EItemType.Consumable)
-       {
-         if (mCurrentItem != null)
-         {
-            SetItemActive(mCurrentItem, false);
-         }
+        if (e.Item.ItemType != EItemType.Consumable)
+        {
+            if (mCurrentItem != null)
+            {
+                SetItemActive(mCurrentItem, false);
+            }
             InventoryItemCollection item = e.Item;
 
             SetItemActive(item, true);
 
             mCurrentItem = e.Item;
-       }
+        }
     }
 
     private bool mLockPickUp = false;
@@ -270,10 +279,11 @@ public class PlayerController : MonoBehaviour
         mLockPickUp = true;
         InventoryItemCollection item = mCurrentItem;
         GameObject goItem = (mCurrentItem as MonoBehaviour).gameObject;
+
         animator.SetTrigger("drop");
         inventory.DropRemovedItem(mCurrentItem);
-        
-       
+
+
         Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
         if (rbItem != null)
         {
@@ -283,10 +293,10 @@ public class PlayerController : MonoBehaviour
                 SetItemActive(mCurrentItem, false);
             }
             Invoke("DoDropItem", 0.25f);
-            
+
         }
-        
     }
+
 
     public void DoDropItem()
     {
@@ -297,7 +307,7 @@ public class PlayerController : MonoBehaviour
             Destroy((mCurrentItem as MonoBehaviour).GetComponent<Rigidbody>());
             mCurrentItem = null;
         }
-        
+
     }
 
     // Update is called once per frame
@@ -308,40 +318,81 @@ public class PlayerController : MonoBehaviour
             Movement();
             Gestures();
             Attack();
+
             if (mInteractItem != null && Input.GetKeyDown(KeyCode.F))
             {
                 // Interact animation
+                animator.SetBool("run", false);
                 mInteractItem.OnInteractAnimation(animator);
                 InteractWithItem();
-
             }
         }
     }
 
+
     private void Gestures()
     {
-      if(controller.isGrounded)
+        if (controller.isGrounded)
         {
-            if(Input.GetKey(KeyCode.H))
+            if (Input.GetKey(KeyCode.H))
             {
-                animator.SetBool("Gestures", true);        
+                animator.SetBool("Gestures", true);
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
                 animator.SetBool("Gestures", false);
+            }
+        }
+    }
+
+
+    private int Attack_1_Hash = Animator.StringToHash("Base Layer.Armature|Action");
+
+    public bool isAttack
+    {
+        get
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.fullPathHash == Attack_1_Hash)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public void Attack()
+    {
+        if (controller.isGrounded)
+        {
+            isAttacking = true;
+            if (mCurrentItem != null && !EventSystem.current.IsPointerOverGameObject())
+            {
+
+                if (mCurrentItem.transform.parent != null && mCurrentItem.ItemType == EItemType.Weapon)
+                {
+                    PressMouse();
+                }
 
             }
         }
     }
-    private void Attack()
+
+    public void PressMouse()
     {
-        if(controller.isGrounded)
-        {
-            if (mCurrentItem != null && !EventSystem.current.IsPointerOverGameObject())
+        if (Time.time >= nextAttack)
             {
-                if (mCurrentItem.transform.parent != null && Input.GetMouseButtonDown(0) && mCurrentItem.ItemType == EItemType.Weapon)
+            if (Input.GetMouseButtonDown(0))
+            {
+                animator.SetTrigger("attack");
+                nextAttack = Time.time + 1f / AttackRate;
+            }
+            if (Hand.transform.Find("PickAxe"))
+            {
+                if (Input.GetMouseButtonDown(0))
                 {
-                    animator.SetTrigger("attack");
+                    animator.SetTrigger("pickaxe");
+                    nextAttack = Time.time + 1f / AttackRate;
                 }
             }
         }
@@ -350,48 +401,52 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
 
-            float h = Input.GetAxis("Horizontal");
-            float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
 
-            if (v < 0)
-                v = 0;
+        if (v < 0)
+            v = 0;
 
-            transform.Rotate(0, h * RotationSpeed * Time.deltaTime, 0);
-            bool move = (v > 0) || (h != 0);
-            if (controller.isGrounded)
+        transform.Rotate(0, h * RotationSpeed * Time.deltaTime, 0);
+        bool move = (v > 0) || (h != 0);
+        if (controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Armature|Action")
+                                  && !animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Armature|PickUp")
+                                  && !animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Armature|PickAxe")
+                                  && !animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Hello_Animation"))
+        {
+            move = (v > 0) || (h != 0);
+            Speed = 10.0f;
+
+            animator.SetBool("run", move);
+
+            _moveDir = Vector3.forward * v;
+
+            _moveDir = transform.TransformDirection(_moveDir);
+            _moveDir *= Speed;
+
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
             {
+                Speed = 25.0f;
                 move = (v > 0) || (h != 0);
-                Speed = 10.0f;
-
-                animator.SetBool("run", move);
 
                 _moveDir = Vector3.forward * v;
 
                 _moveDir = transform.TransformDirection(_moveDir);
                 _moveDir *= Speed;
-
-                if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
-                {
-                    Speed = 25.0f;
-                    move = (v > 0) || (h != 0);
-
-                    _moveDir = Vector3.forward * v;
-
-                    _moveDir = transform.TransformDirection(_moveDir);
-                    _moveDir *= Speed;
-                }
-                if (Input.GetKeyUp(KeyCode.W))
-                {
-                    animator.SetBool("run", false);
-                    _moveDir = new Vector3(0, 0, 0);
-                // Starting Idle animation
-                }
             }
-            _moveDir.y -= Gravity * Time.deltaTime;
+            if (Input.GetKeyUp(KeyCode.W))
+            {
+                animator.SetBool("run", false);
+                _moveDir = new Vector3(0, 0, 0);
+                // Starting Idle animation
+            }
+        }
+        _moveDir.y -= Gravity * Time.deltaTime;
 
-            controller.Move(_moveDir * Time.deltaTime);
-        
+        controller.Move(_moveDir * Time.deltaTime);
+
     }
+
     public void InteractWithItem()
     {
         if (mInteractItem != null)
@@ -415,6 +470,7 @@ public class PlayerController : MonoBehaviour
 
         mInteractItem = null;
     }
+
 
     private void OnTriggerEnter(Collider other)
     {

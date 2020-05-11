@@ -13,7 +13,7 @@ public class GuardianDialog : MonoBehaviour
     public Button agree, disagree;
     Button buttonPressed;
 
-    public GameObject Weapon;
+    public GameObject[] Weapons;
 
     public GameObject guardian;
 
@@ -25,6 +25,7 @@ public class GuardianDialog : MonoBehaviour
 
 
 
+
     void Start()
     {
         animator = guardian.GetComponent<Animator>();
@@ -33,14 +34,20 @@ public class GuardianDialog : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        
-        if (player.Hand.transform.Find("Wooden Axe"))
+    {  
+        foreach(GameObject index in Weapons)
         {
-            Hud.OpenNPCDialog();
-            changeText.text = "Guardian: Disarm Immediately!";
-            agree.gameObject.SetActive(true);
-            disagree.gameObject.SetActive(true);
+            InventoryItemCollection mCurrentItem = index.gameObject.GetComponent<InventoryItemCollection>();
+            if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+            {
+                if (mCurrentItem.ItemType == EItemType.Weapon)
+                {
+                    Hud.OpenNPCDialog();
+                    changeText.text = "Guardian: Disarm Immediately!";
+                    agree.gameObject.SetActive(true);
+                    disagree.gameObject.SetActive(true);
+                }
+            }
         }
     }
 
@@ -49,12 +56,21 @@ public class GuardianDialog : MonoBehaviour
         if (buttonPressed == agree)
         {
             Debug.Log("Clicked: " + agree.name);
-            InventoryItemCollection mCurrentItem = Weapon.gameObject.GetComponent<InventoryItemCollection>();
-            player.SetItemActive(mCurrentItem,false);
-            changeText.text = "Guardian: Thanks";
-            agree.gameObject.SetActive(false);
-            disagree.gameObject.SetActive(false);
-            animator.Play("Armature|Watching");
+            foreach (GameObject index in Weapons)
+            {
+                InventoryItemCollection mCurrentItem = index.gameObject.GetComponent<InventoryItemCollection>();
+                 if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+                  {
+                    if (mCurrentItem.ItemType == EItemType.Weapon)
+                    {
+                        player.SetItemActive(mCurrentItem, false);
+                        changeText.text = "Guardian: Thanks";
+                        agree.gameObject.SetActive(false);
+                        disagree.gameObject.SetActive(false);
+                        animator.Play("Armature|Watching");
+                    }
+                  }
+            }
         }
 
         if (buttonPressed == disagree)

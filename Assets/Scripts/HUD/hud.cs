@@ -14,6 +14,8 @@ public class hud : MonoBehaviour
     public GameObject NPCDialog;
 
     public GameObject Shadow;
+
+    public GameObject GameOver;
     void Start()
     {
         Inventory.ItemAdded += InventoryScript_ItemAdded;
@@ -113,7 +115,7 @@ public class hud : MonoBehaviour
         MessagePanel.SetActive(false);
     }
 
-    public void OpenHint(string text)
+    public void OpenHint()
     {
         Hint.SetActive(true);
     }
@@ -130,6 +132,16 @@ public class hud : MonoBehaviour
     public void CloseNPCDialog()
     {
         NPCDialog.SetActive(false);
+    }
+
+    public void OpenGameOver()
+    {
+        GameOver.SetActive(true);
+    }
+
+    public void CloseGameOver()
+    {
+        GameOver.SetActive(false);
     }
 
 }

@@ -15,7 +15,6 @@ public class ItemClickHandler : MonoBehaviour
     private float lastTapTime = 0;
 
     private Button _button;
-
     private void Awake()
     {
         player = GameObject.Find("Player");
@@ -67,8 +66,11 @@ public class ItemClickHandler : MonoBehaviour
         get
         {
             ItemDragHandler dragHandler = gameObject.transform.Find("ItemImage").GetComponent<ItemDragHandler>();
-
-            return dragHandler.Item;
+            if (dragHandler.Item != null) // code added
+            {
+                return dragHandler.Item; 
+            }
+            return null; // code added
         }
     }
     public void OnItemClicked()
