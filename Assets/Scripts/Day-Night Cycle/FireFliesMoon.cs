@@ -19,7 +19,7 @@ public class FireFliesMoon : MonoBehaviour
     {
         if (moon.intensity > 0.35f)
         {
-            Debug.Log("Working");
+            //Debug.Log("Working");
             foreach (ParticleSystem flies in FliesFire)
             {
                 flies.Stop();

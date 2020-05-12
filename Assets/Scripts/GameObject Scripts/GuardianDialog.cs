@@ -55,7 +55,7 @@ public class GuardianDialog : MonoBehaviour
     {
         if (buttonPressed == agree)
         {
-            Debug.Log("Clicked: " + agree.name);
+          //  Debug.Log("Clicked: " + agree.name);
             foreach (GameObject index in Weapons)
             {
                 InventoryItemCollection mCurrentItem = index.gameObject.GetComponent<InventoryItemCollection>();
@@ -78,7 +78,7 @@ public class GuardianDialog : MonoBehaviour
             animator.Play("Armature|Attack");
             player.GuardianKill();
             Hud.CloseNPCDialog();
-            Debug.Log("Clicked: " + disagree.name);
+           // Debug.Log("Clicked: " + disagree.name);
         }
 
     }
