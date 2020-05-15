@@ -15,74 +15,79 @@ public class Savezone : MonoBehaviour
 
     public Text changeText;
 
-    bool timerIsRunning = false;
-    float time = 9;
 
-    public void OnTriggerEnter(Collider other)
-    {
-        gameObject.GetComponent<SphereCollider>().isTrigger = true;
-    }
+    bool timerIsRunning = false;
+    float time = 10;
+
 
     public void OnTriggerStay(Collider other)
     {
-        if (player)
+        if (player.IsArmed)
         {
-            if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
-            {
-                SaveMess.SetActive(true);
-                Timer();
-            }
-
-            else
-            {
-                SaveMess.SetActive(false);
-                ResetTimer();
-            }
+            SaveMess.SetActive(true);
+            Timer();
         }
+        if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+        {
+            SaveMess.SetActive(true);
+        }
+        else
+        {
+            SaveMess.SetActive(false);
+            ResetTimer();
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        SaveMess.SetActive(true);
+    }
+
+
+
+    public void OnTriggerExit(Collider other)
+    {
+        SaveMess.SetActive(false);
+        ResetTimer();
     }
 
     public void Timer()
     {
         if (!timerIsRunning)
         {
-            if (time > 0)
+            StartCoroutine(WaitForSecond());
+            changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:" + time.ToString("00"));
+            if (time <= 0)
             {
-                time -= Time.deltaTime;
-                changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:0{0}", Mathf.FloorToInt(time % 360));
-                if (time <= 0)
-                {
-                    SaveMess.SetActive(false);
-                    player.TakeDamage(100);
-                }
+                SaveMess.SetActive(false);
+                player.TakeDamage(100);
             }
+
 
         }
     }
+
     public void ResetTimer()
     {
+        time = 10;
         if (!timerIsRunning)
         {
-            time = 9;
-            if (time > 0)
-            {
-                time -= Time.deltaTime;
-                changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:0{0}", Mathf.FloorToInt(time % 360));
-                if (time <= 0)
-                {
-                    SaveMess.SetActive(false);
-                    player.TakeDamage(100);
-                }
-            }
+            StartCoroutine(WaitForSecond());
+            changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:" + time.ToString("00"));
 
+            if (time <= 0)
+            {
+                SaveMess.SetActive(false);
+                player.TakeDamage(100);
+            }
         }
     }
 
-    public void OnTriggerExit(Collider other)
-    {
 
-        gameObject.GetComponent<SphereCollider>().isTrigger = false;
-        SaveZ.SetActive(false);
-        SaveMess.SetActive(false);
+    IEnumerator WaitForSecond()
+    {
+        yield return new WaitForSeconds(1f);
+        time -= Time.deltaTime;
     }
 
 

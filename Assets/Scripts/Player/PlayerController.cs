@@ -124,6 +124,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsArmed
+    {
+        get
+        {
+            if (mCurrentItem == null)
+                return false;
+
+            return mCurrentItem.ItemType == EItemType.Weapon;
+        }
+    }
+
     public void Dead()
     {
         animator.SetTrigger("death");
