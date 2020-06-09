@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class Savezone : MonoBehaviour
@@ -17,7 +18,7 @@ public class Savezone : MonoBehaviour
 
 
     bool timerIsRunning = false;
-    float time = 10;
+    float time = 10f;
 
 
     public void OnTriggerStay(Collider other)
@@ -25,11 +26,12 @@ public class Savezone : MonoBehaviour
         if (player.IsArmed)
         {
             SaveMess.SetActive(true);
-            Timer();
+            //Timer();
         }
         if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
         {
             SaveMess.SetActive(true);
+            Timer();
         }
         else
         {
@@ -83,11 +85,16 @@ public class Savezone : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        time -= Time.deltaTime;
+    }
+
 
     IEnumerator WaitForSecond()
     {
         yield return new WaitForSeconds(1f);
-        time -= Time.deltaTime;
+        //time -= Time.deltaTime;
     }
 
 
