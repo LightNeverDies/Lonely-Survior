@@ -23,41 +23,78 @@ public class Savezone : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (player.IsArmed)
+        if (player)
         {
-            SaveMess.SetActive(true);
-            //Timer();
-        }
-        if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
-        {
-            SaveMess.SetActive(true);
-            Timer();
-        }
-        else
-        {
-            SaveMess.SetActive(false);
-            ResetTimer();
+            if (player.IsArmed)
+            {
+                SaveMess.SetActive(true);
+               // Timer();
+            }
+            if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+            {
+                SaveMess.SetActive(true);
+               // Timer();
+            }
+            else
+            {
+                SaveMess.SetActive(false);
+                //ResetTimer();
+            }
         }
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        SaveMess.SetActive(true);
-    }
+    /*    public void OnCollisionStay(Collision collision)
+        {
 
+                if (player.IsArmed)
+                {
+                    SaveMess.SetActive(true);
+                    //Timer();
+                }
+                if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+                {
+                    SaveMess.SetActive(true);
+                  //  Timer();
+                }
+                else
+                {
+                    SaveMess.SetActive(false);
+                   // ResetTimer();
+                }
 
+        }
+    */
+    /*    public void OnTriggerEnter(Collider other)
+        {
+            if (player.IsArmed)
+            {
+                SaveMess.SetActive(true);
+                Timer();
+            }
+            if (player.Hand.transform.Find("Wooden Axe") || player.Hand.transform.Find("PickAxe"))
+            {
+                SaveMess.SetActive(true);
+                Timer();
+            }
+            else
+            {
+                SaveMess.SetActive(false);
+                ResetTimer();
+            }
+        }*/
 
     public void OnTriggerExit(Collider other)
     {
         SaveMess.SetActive(false);
-        ResetTimer();
+       // ResetTimer();
     }
 
-    public void Timer()
+
+/*    public void Timer()
     {
         if (!timerIsRunning)
         {
-            StartCoroutine(WaitForSecond());
+            //StartCoroutine(WaitForSecond());
             changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:" + time.ToString("00"));
             if (time <= 0)
             {
@@ -65,16 +102,15 @@ public class Savezone : MonoBehaviour
                 player.TakeDamage(100);
             }
 
-
         }
-    }
+    }*/
 
-    public void ResetTimer()
+/*    public void ResetTimer()
     {
         time = 10;
         if (!timerIsRunning)
         {
-            StartCoroutine(WaitForSecond());
+            //StartCoroutine(WaitForSecond());
             changeText.text = string.Format("Disarm Immediately - Save Zone" + "00:" + time.ToString("00"));
 
             if (time <= 0)
@@ -84,20 +120,16 @@ public class Savezone : MonoBehaviour
             }
         }
     }
-
-    private void Update()
-    {
-        time -= Time.deltaTime;
-    }
-
-
+*//*
     IEnumerator WaitForSecond()
     {
         yield return new WaitForSeconds(1f);
         //time -= Time.deltaTime;
-    }
+    }*/
 
-
-
+/*    void FixedUpdate()
+    {
+        time -= Time.deltaTime;
+    }*/
 
 }
